@@ -7,10 +7,10 @@ export const cameraSlice = createSlice({
   },
   reducers: {
     setCameraImage: (state, action) => {
-      state.value = action.payload;
+      state.cameraImage = action.payload;
     },
     resetCameraImage: (state) => {
-      state.value = null;
+      state.cameraImage = null;
     },
   },
 });

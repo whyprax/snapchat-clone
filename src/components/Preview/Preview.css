@@ -1,0 +1,45 @@
+.preview {
+  position: relative;
+  border: 1px solid black;
+  width: 300px;
+  height: 500px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.preview__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: white;
+  cursor: pointer;
+  border-radius: 100px;
+}
+
+.preview__toolbarRight {
+  color: white;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+}
+
+.preview__footer {
+  cursor: pointer;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: #fefc01;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 100px;
+}
