@@ -1,44 +1,81 @@
-import React, { useEffect } from "react";
-import "./Preview.css";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import {
-  resetCameraImage,
-  selectCameraImage,
-} from "../../features/cameraSlice";
-import CloseIcon from "@mui/icons-material/Close";
-import TextFieldsIcon from "@mui/icons-material/TextFields";
 import {
   AttachFile,
+  Close,
   Create,
   Crop,
   MusicNote,
   Note,
   Send,
+  TextFields,
   Timer,
 } from "@mui/icons-material";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import {
+  resetCameraImage,
+  selectCameraImage,
+} from "../../features/cameraSlice";
+import "./Preview.css";
+import { v4 as uuid } from "uuid";
+import { db, storage } from "../../firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import {
+  getDownloadURL,
+  ref,
+  uploadBytesResumable,
+  uploadString,
+} from "@firebase/storage";
 
-const Preview = () => {
-  const cameraImg = useSelector(selectCameraImage);
+function Preview() {
+  const cameraImage = useSelector(selectCameraImage);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   useEffect(() => {
-    if (!cameraImg) {
-      navigate("/");
+    if (!cameraImage) {
+      navigate("/camera", { replace: true });
     }
-  }, [cameraImg, navigate]);
-
+  }, [cameraImage, navigate]);
   const closePreview = () => {
     dispatch(resetCameraImage());
-    navigate("/");
+  };
+
+  const sendPost = () => {
+    const id = uuid();
+    const metadata = {
+      contentType: "image/jpeg",
+    };
+    const storageRef = ref(storage, `posts/${id}`);
+    const uploadTask = uploadBytesResumable(storageRef, cameraImage, metadata);
+    uploadTask.on(
+      "state_changed",
+      null,
+      (error) => {
+        console.log(error);
+      },
+      () => {
+        uploadString(storageRef, cameraImage, "data_url").then((snapshot) => {
+          getDownloadURL(storageRef).then((url) => {
+            addDoc(collection(db, "posts"), {
+              imageUrl: url,
+              username: "User",
+              // profilePic: user.profilePic,
+              read: false,
+              timestamp: serverTimestamp(),
+            });
+            navigate("/", { replace: true });
+          });
+        });
+      }
+    );
   };
 
   return (
     <div className="preview">
-      <CloseIcon className="preview__close" onClick={closePreview} />
-      <div className="preview__toolbarRight">
-        <TextFieldsIcon />
+      <Close onClick={closePreview} className="preview__close" />
+      <div class="preview__toolbarRight">
+        <TextFields />
         <Create />
         <Note />
         <MusicNote />
@@ -46,13 +83,13 @@ const Preview = () => {
         <Crop />
         <Timer />
       </div>
-      <img src={cameraImg} alt="" />
-      <div className="preview__footer">
-        <h3>Send Now</h3>
+      <img src={cameraImage} alt="" />
+      <div onClick={sendPost} class="preview__footer">
+        <h2>Send Now</h2>
         <Send fontSize="small" className="preview__sendIcon" />
       </div>
     </div>
   );
-};
+}
 
 export default Preview;
