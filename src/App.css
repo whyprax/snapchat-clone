@@ -6,3 +6,15 @@
   background-color: #fefc01;
   height: 100vh;
 }
+
+.app__body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.app__logo {
+  width: 80px;
+  cursor: pointer;
+}

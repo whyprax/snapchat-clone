@@ -27,11 +27,14 @@ import {
   uploadBytesResumable,
   uploadString,
 } from "@firebase/storage";
+import { selectUser } from "../../features/appSlice";
 
 function Preview() {
   const cameraImage = useSelector(selectCameraImage);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const user = useSelector(selectUser);
+
   useEffect(() => {
     if (!cameraImage) {
       navigate("/camera", { replace: true });
@@ -59,8 +62,8 @@ function Preview() {
           getDownloadURL(storageRef).then((url) => {
             addDoc(collection(db, "posts"), {
               imageUrl: url,
-              username: "User",
-              // profilePic: user.profilePic,
+              username: user.username,
+              profilePic: user.profilePic,
               read: false,
               timestamp: serverTimestamp(),
             });
