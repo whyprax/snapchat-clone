@@ -64,7 +64,7 @@ function Preview() {
               read: false,
               timestamp: serverTimestamp(),
             });
-            navigate("/", { replace: true });
+            navigate("/chats", { replace: true });
           });
         });
       }

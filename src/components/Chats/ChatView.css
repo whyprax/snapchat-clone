@@ -1,0 +1,21 @@
+.chatview {
+  position: relative;
+  border: 1px solid black;
+  width: 300px;
+  height: 500px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chatview > img {
+  cursor: pointer;
+}
+
+.chatview__timer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 10px;
+}
